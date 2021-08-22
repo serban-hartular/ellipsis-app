@@ -34,7 +34,8 @@ create_table_sql = """
 	is_conllu_correct int,
 	is_conllu_complete int,
 	ellipsis_type text,
-	comment text
+	comment text,
+	sentence_src text
     );
     """
 
