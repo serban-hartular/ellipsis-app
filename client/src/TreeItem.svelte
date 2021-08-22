@@ -1,8 +1,8 @@
 <script lang="ts">
     //	import { slide } from 'svelte/transition'
         import SvelteTooltip from 'svelte-tooltip';    
-        import type ConlluTree from './tree';
-        import {ud_deprel_descriptions, ro_deprel_descriptions, findDeprel} from './descriptions'
+        import type ConlluTree from './ts_tree/tree';
+        import {ud_deprel_descriptions, ro_deprel_descriptions, findDeprel} from './ts_tree/descriptions'
         import { dataset_dev } from 'svelte/internal';
         
         export let node : ConlluTree;

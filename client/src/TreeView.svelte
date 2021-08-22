@@ -13,7 +13,7 @@
 //	import { slide } from 'svelte/transition'
 
 
-import ConlluTree from "./tree";
+import ConlluTree from "./ts_tree/tree";
 import TreeItem from "./TreeItem.svelte";
 
 	export let root : ConlluTree

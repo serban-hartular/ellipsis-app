@@ -8,7 +8,7 @@
 	import Modal,{getModal} from './Modal.svelte'
 
 
-	import ConlluTree from './tree';
+	import ConlluTree from './ts_tree/tree';
 
 
 	let conllu_tree : ConlluTree = null;
@@ -30,10 +30,10 @@
 			selected_data = null
 		}
 	}
-	import { EllipsisDetector, EllipsisReport } from './ellipsisDetector';
+	import { EllipsisDetector, EllipsisReport } from './ts_tree/ellipsisDetector';
 	import {ro_intranz_licensers, ro_obj_licensers, ro_passreflex_licensers, 
 			ro_copula_licensers, ro_iobj_copula_licensers, ro_impers_experiment_dobj,
-			ro_impers_experiment_iobj} from './roEllipsisPatterns'
+			ro_impers_experiment_iobj} from './ts_tree/roEllipsisPatterns'
 
 	let e_obj_detector = new EllipsisDetector([ro_obj_licensers, ro_passreflex_licensers,
 		ro_intranz_licensers, ro_copula_licensers, ro_iobj_copula_licensers,

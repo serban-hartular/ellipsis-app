@@ -22,7 +22,7 @@
         obj[event.target.id] = event.target.innerHTML
     }
 
-    import {findDeprel, ro_deprel_descriptions, ud_deprel_descriptions} from './descriptions'
+    import {findDeprel, ro_deprel_descriptions, ud_deprel_descriptions} from './ts_tree/descriptions'
     function deprelURL(deprel : string) : string {
         let description = findDeprel(deprel, [ro_deprel_descriptions, ud_deprel_descriptions])
         if(!description) return null

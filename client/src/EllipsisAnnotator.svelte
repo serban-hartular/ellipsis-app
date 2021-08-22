@@ -1,5 +1,5 @@
 <script lang='ts'>
-    import type {ConlluData} from "./tree";
+    import type {ConlluData} from "./ts_tree/tree";
 	import Modal,{getModal} from './Modal.svelte'
 
     export let conllu_data : ConlluData

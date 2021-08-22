@@ -1,5 +1,5 @@
 <script lang="ts">
-    import ConlluTree from "./tree";
+    import ConlluTree from "./ts_tree/tree";
     import SvelteTooltip from 'svelte-tooltip';   
     import Modal,{getModal} from './Modal.svelte'
  
