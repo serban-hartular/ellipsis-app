@@ -1,12 +1,12 @@
 
 from cube.api import Cube
-#from cube.io_utils.conll import ConllEntry
-
-cube_ro=Cube(verbose=True)         # initialize it
-cube_ro.load("ro")                 # select the desired language (it will auto-download the model on first run)
-
-cube_en = Cube(verbose=True)
-cube_en.load("en")
+# #from cube.io_utils.conll import ConllEntry
+# 
+# cube_ro=Cube(verbose=True)         # initialize it
+# cube_ro.load("ro")                 # select the desired language (it will auto-download the model on first run)
+# 
+# cube_en = Cube(verbose=True)
+# cube_en.load("en")
 
 conll_entry_attribs = ['index', 'word', 'lemma', 'upos', 'xpos', 'attrs', 'head', 'label', 'deps', 'space_after']
 conll_field_dict = {'index':'ID', 'word':'FORM', 'lemma':'LEMMA', 'upos':'UPOS', 'xpos':'XPOS',
@@ -22,9 +22,7 @@ def conll_entry_to_dict(entry) -> dict:
     d[CHILDREN] = list()
     return d
 
-def text_to_tree(text : str, lang:str = 'ro') -> dict:
-    if lang == 'ro':
-        cube = cube_ro
+def text_to_tree(text : str, cube : Cube) -> dict:
     sentences = cube(text)
     sentence = sentences[0]
     sentence = [conll_entry_to_dict(entry) for entry in sentence]
@@ -64,16 +62,12 @@ def get_parse_dict(text : str) -> dict:
     add_tree_form(d)
     return d
 
-def text_to_treelist(text : str, lang:str = 'ro') -> list:
+def text_to_treelist(text : str, cube : Cube) -> list:
     """Given a text, returns a list of parse trees, one for each sentence in the text.
     Each parse tree is in the form of a dict with k,v pairs for the 10 conllu parameters
     (ID, FORM, LEMMA, UPOS, etc.), plus a key 'children' whose value is a list of dicts
     containing the node's children."""
-    if lang == 'en':
-        cube = cube_en
-        print("Language: en")
-    else:
-        cube = cube_ro
+
     sentences = cube(text)
     treelist = []
     for sentence in sentences:

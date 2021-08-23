@@ -1,6 +1,7 @@
 from flask import Flask, send_from_directory
 from flask import request
 import json
+import urllib
 
 NLPCUBE_ENABLE = False
 
@@ -29,20 +30,6 @@ def static_dir_index():
 def static_dir(path):
     return send_from_directory("static", path)
 
-# @app.route("/rand")
-# def hello():
-#     n = random.randint(0, 100)
-#     print(n)
-#     return str(n)
-# 
-# @app.route("/echo", methods=['POST'])
-# def echo():
-#     obj = request.get_json()
-#     print(obj)
-#     obj['text'] = obj['text'] * 2
-#     print(json.dumps(obj))
-#     return json.dumps(obj)
-
 @app.route("/parse", methods=['POST'])
 def parse_text():
     return_obj = {'tree': dict(), 'error_msg': ''}
@@ -59,11 +46,20 @@ def parse_text():
     except Exception as e:
         return_obj['error_msg'] = 'Error: Request lacks property ' + str(e)
         return return_obj
-    parse_fns = {'racai' : get_racai_parse.get_racai_parse}
-    if NLPCUBE_ENABLE:
-        parse_fns['nlpcube'] = get_nlpcube_parse.text_to_treelist
-    parse_obj = parse_fns[parser](text, lang)
-    return_obj['tree'] = parse_obj
+    if parser == 'racai':
+        parse_obj = get_racai_parse.get_racai_parse(text, lang)
+        return_obj['tree'] = parse_obj
+    else:
+        if lang == 'en':
+            host = 'http://localhost:5008' # english lang parser
+        else:
+            host = 'http://localhost:5009' # romanian lang parser
+        r = urllib.request.urlopen(host, json.dumps({'text':text}).encode('utf8'))
+        html = r.read()
+        parse = html.decode('utf-8')
+        return_obj = json.loads(parse)
+        print(return_obj)
+    
     return json.dumps(return_obj)
 
 import database
