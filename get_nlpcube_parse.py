@@ -23,25 +23,6 @@ def conll_entry_to_dict(entry) -> dict:
     d[CHILDREN] = list()
     return d
 
-def text_to_tree(text : str, cube : Cube) -> dict:
-    doc = cube(text)
-    sentences = doc.sentences # needed by new API, dammit!
-    sentence = sentences[0]
-    # sentence = [conll_entry_to_dict(entry) for entry in sentence]
-    sentence = [conll_entry_to_dict(entry) for entry in sentence.word]
-    # now build tree
-    tree = [w for w in sentence]
-    for word in sentence:
-        # find head
-        head = [h for h in sentence if h['ID'] == word['HEAD']]
-        if len(head) == 1:
-            head = head[0]
-            head[CHILDREN].append(word)
-            tree.remove(word)
-    if len(tree) == 1:
-        return tree[0]
-    return None
-
 def add_tree_form(tree : dict):
     for child in tree[CHILDREN]:
         add_tree_form(child)
@@ -58,25 +39,20 @@ def add_tree_form(tree : dict):
             tree_form += f[TREE_FORM]
     tree[TREE_FORM] = tree_form
 
-def get_parse_dict(text : str) -> dict:
-    d = text_to_tree(text)
-    if not d:
-        return None
-    add_tree_form(d)
-    return d
-
-def text_to_treelist(text : str, cube : Cube) -> list:
+def text_to_treelist(text : str, cube : Cube, OLD_API = False) -> list:
     """Given a text, returns a list of parse trees, one for each sentence in the text.
     Each parse tree is in the form of a dict with k,v pairs for the 10 conllu parameters
     (ID, FORM, LEMMA, UPOS, etc.), plus a key 'children' whose value is a list of dicts
     containing the node's children."""
-
-    doc = cube(text)
-    sentences = doc.sentences # this is needed because new API, dammit!
+    if OLD_API:
+        sentences = cube(text)
+    else:
+        doc = cube(text)
+        sentences = doc.sentences # this is needed because new API, dammit!
     treelist = []
     for sentence in sentences:
-        # sentence = [conll_entry_to_dict(entry) for entry in sentence]
-        sentence = [conll_entry_to_dict(entry) for entry in sentence.words]
+        sentence = [conll_entry_to_dict(entry) for entry in (sentence if OLD_API else sentence.words)]
+        # sentence = [conll_entry_to_dict(entry) for entry in sentence.words]
         # now build tree
         tree = [w for w in sentence] # first, just copy the words
         for word in sentence: # for each word

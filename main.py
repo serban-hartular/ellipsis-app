@@ -2,6 +2,7 @@ from flask import Flask, send_from_directory
 from flask import request
 import json
 import urllib
+import sys
 
 import get_racai_parse
 
@@ -54,8 +55,6 @@ def parse_text():
         html = r.read()
         parse = html.decode('utf-8')
         return_obj = json.loads(parse)
-        print(return_obj)
-    
     return json.dumps(return_obj)
 
 import database
@@ -89,4 +88,10 @@ def store_to_db():
 
 
 if __name__ == "__main__":
-    app.run(debug=True, host='0.0.0.0', port='5000') # need to add host option
+    args = {'port':'5000', 'host':'0.0.0.0'} # defaults
+    for arg in sys.argv[1:]:
+        k,v = arg.split('=',1)
+        if k in args:
+            args[k] = v
+    print(args)
+    app.run(debug=True, host=args['host'], port=args['port']) # need to add host option
