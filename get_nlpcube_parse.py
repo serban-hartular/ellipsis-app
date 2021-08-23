@@ -18,14 +18,17 @@ TREE_FORM = 'TREE_FORM'
 def conll_entry_to_dict(entry) -> dict:
     d = dict()
     for attrib in conll_entry_attribs:
-        d[conll_field_dict[attrib]] = entry.__getattribute__(attrib)
+        # d[conll_field_dict[attrib]] = entry.__getattribute__(attrib)
+        d[conll_field_dict[attrib]] = str(entry.__getattribute__(attrib))
     d[CHILDREN] = list()
     return d
 
 def text_to_tree(text : str, cube : Cube) -> dict:
-    sentences = cube(text)
+    doc = cube(text)
+    sentences = doc.sentences # needed by new API, dammit!
     sentence = sentences[0]
-    sentence = [conll_entry_to_dict(entry) for entry in sentence]
+    # sentence = [conll_entry_to_dict(entry) for entry in sentence]
+    sentence = [conll_entry_to_dict(entry) for entry in sentence.word]
     # now build tree
     tree = [w for w in sentence]
     for word in sentence:
@@ -68,10 +71,12 @@ def text_to_treelist(text : str, cube : Cube) -> list:
     (ID, FORM, LEMMA, UPOS, etc.), plus a key 'children' whose value is a list of dicts
     containing the node's children."""
 
-    sentences = cube(text)
+    doc = cube(text)
+    sentences = doc.sentences # this is needed because new API, dammit!
     treelist = []
     for sentence in sentences:
-        sentence = [conll_entry_to_dict(entry) for entry in sentence]
+        # sentence = [conll_entry_to_dict(entry) for entry in sentence]
+        sentence = [conll_entry_to_dict(entry) for entry in sentence.words]
         # now build tree
         tree = [w for w in sentence] # first, just copy the words
         for word in sentence: # for each word

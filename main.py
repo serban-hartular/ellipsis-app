@@ -3,10 +3,6 @@ from flask import request
 import json
 import urllib
 
-NLPCUBE_ENABLE = False
-
-if NLPCUBE_ENABLE:
-    import get_nlpcube_parse
 import get_racai_parse
 
 app = Flask(__name__)
@@ -93,4 +89,4 @@ def store_to_db():
 
 
 if __name__ == "__main__":
-    app.run(debug=True, port='5000') # need to add host option
+    app.run(debug=True, host='0.0.0.0', port='5000') # need to add host option
