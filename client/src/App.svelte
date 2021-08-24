@@ -1,7 +1,7 @@
 <script lang="ts">
 	//added a comment just cause.
 	import { children, dataset_dev } from 'svelte/internal';
-	import TreeView from './TreeView.svelte';
+	import ConlluTreeView from './ConlluTreeView.svelte';
 	import ParseRequest from './ParseRequest.svelte';
 	import DictEditor from './DictEditor.svelte';
 	import EllipsisAnnotator from './EllipsisAnnotator.svelte';
@@ -118,7 +118,7 @@ import { DiscourseTree } from './ts_tree/discourseTree';
 				<td><button class="help" on:click={()=>getModal('modal_deptree').open()}>?</button>
 				</td>
 				</tr></table>
-				<TreeView bind:root={conllu_tree} bind:node={conllu_tree} bind:selected_id={selected_id} />
+				<ConlluTreeView bind:root={conllu_tree} bind:node={conllu_tree} bind:selected_id={selected_id} />
 				<br/>
 				<div>
 					<button on:click={findEllipses}>Find Ellipses</button>

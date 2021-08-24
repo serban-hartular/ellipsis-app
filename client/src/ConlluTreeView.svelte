@@ -14,7 +14,7 @@
 
 
 import ConlluTree from "./ts_tree/tree";
-import TreeItem from "./TreeItem.svelte";
+import TreeItem from "./ConlluItem.svelte";
 
 	export let root : ConlluTree
 	export let node : ConlluTree
