@@ -112,6 +112,15 @@ export default class ConlluTree {
         child.parent = this
         this.children.push(child)
         this.children.sort((e1, e2) => parseFloat(e1.data.ID) - parseFloat(e2.data.ID))
+        this.generateComponentText()
+    }
+    removeChild(child : ConlluTree) : ConlluTree{
+        let index = this.children.indexOf(child)
+        if(index < 0) return null
+        this.children.splice(index, 1)
+        child.parent = null
+        this.generateComponentText()
+        return child
     }
     * traverse() : Generator<ConlluTree> {
         yield this;
@@ -147,6 +156,7 @@ export default class ConlluTree {
         }
         let index = old_parent.children.indexOf(this)
         old_parent.children.splice(index, 1)
+        old_parent.generateComponentText()
         new_parent.addChild(this)
         new_parent.redoHeads()
         return true

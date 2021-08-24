@@ -34,6 +34,7 @@
 	import {ro_intranz_licensers, ro_obj_licensers, ro_passreflex_licensers, 
 			ro_copula_licensers, ro_iobj_copula_licensers, ro_impers_experiment_dobj,
 			ro_impers_experiment_iobj} from './ts_tree/roEllipsisPatterns'
+import { DiscourseTree } from './ts_tree/discourseTree';
 
 	let e_obj_detector = new EllipsisDetector([ro_obj_licensers, ro_passreflex_licensers,
 		ro_intranz_licensers, ro_copula_licensers, ro_iobj_copula_licensers,
@@ -63,11 +64,8 @@
 
 	function findEllipses() {
 		e_list = e_obj_detector.findEllipsis(conllu_tree)
-		// let node_list = e_obj_detector.findEllipsis(conllu_tree) 
-		// console.log(node_list)
-		// for(let node of node_list) {
-		// 	e_list.push({node:node, message:'dirobj'})
-		// }
+		let discourse = new DiscourseTree(conllu_tree)
+		console.log(discourse)
 	}
 	function onEllipsisClick(event) {
 		// console.log(event.target)
@@ -105,6 +103,10 @@
 		});
 	}
 </script>
+
+<svelte:head>
+	<title>Ellipsis App</title>
+</svelte:head>
 
 <table>
 	<tr>
