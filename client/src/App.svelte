@@ -3,7 +3,7 @@
 	import { children, dataset_dev } from 'svelte/internal';
 	import ConlluTreeView from './ConlluTreeView.svelte';
 	import ParseRequest from './ParseRequest.svelte';
-	import DictEditor from './DictEditor.svelte';
+	import DictEditor from './ConlluItemEditor.svelte';
 	import EllipsisAnnotator from './EllipsisAnnotator.svelte';
 	import Modal,{getModal} from './Modal.svelte'
 
@@ -74,6 +74,7 @@
 		// console.log(event.target)
 		// console.log(event.target.id)
 		selected_id = event.target.id
+		
 	}
 	function addToDB() {
 		let conllu_text = ''
@@ -132,7 +133,7 @@
 						<tr><th>ID</th><th>Lemma</th><th>Missing</th></tr>
 					{/if}
 					{#each e_list as ellipsis}
-						<tr on:click={onEllipsisClick}>
+						<tr on:click={onEllipsisClick} style="cursor: pointer;">
 						<td class="ellipses" id={ellipsis.node.data.ID}>{ellipsis.node.data.ID}</td>
 						<td class="ellipses" id={ellipsis.node.data.ID}>{ellipsis.node.data.FORM}</td>
 						<td class="ellipses" id={ellipsis.node.data.ID}>{ellipsis.type}</td>
@@ -143,12 +144,15 @@
 				<div>
 					{#if discourse_tree}
 						<h3>Discourse Tree</h3>
+						Legend: <span style="background-color: #FFDDDD80;">C-commander</span> of 
+								<span style="background-color: lightblue;">selection</span>
 						<DiscourseTreeView
 							bind:root = {discourse_tree}
 							bind:node = {discourse_tree} 
 							bind:selected_id = {selected_id}
 							bind:discourse_c_commanders = {discourse_c_commanders}
 						/>
+					<br/> <br/>
 					{/if}
 				</div>
 			{/if}
@@ -249,4 +253,8 @@
 		padding-bottom: 0px;
 		margin: 0px;
 	}
+
+	:global(html) { height: 100%; overflow:auto; }
+	:global(body) { height: 100%; }
+
 </style>

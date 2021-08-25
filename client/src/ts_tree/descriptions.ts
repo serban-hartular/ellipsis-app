@@ -58,7 +58,7 @@ export let ro_deprel_descriptions = [
     {name: 'nsubj:pass',    description: 'Nominal subjects of passive verbs', site: 'https://universaldependencies.org/ro/dep/nsubj-pass.html'},
     {name: 'csubj:pass',    description: 'Clausal subjects of passive verbs', site: 'https://universaldependencies.org/ro/dep/csubj-pass.html'},
     {name: 'nmod:agent',    description: 'Agents of passive verbs', site: 'https://universaldependencies.org/ro/'},
-    {name: 'nmod:pmod',     description: 'Prepositional objects which cannot be omitted as determiners of some verbs.', site: 'https://universaldependencies.org/ro/'},
+    {name: 'nmod:pmod',     description: 'Prepositional complement.', site: 'https://universaldependencies.org/ro/'},
     {name: 'expl:impers',   description: 'Impersonal value of the reflexive', site: 'https://universaldependencies.org/u/dep/expl-impers.html'},
     {name: 'expl:pv',       description: 'Clitics of inherently reflexive verbs', site: 'https://universaldependencies.org/u/dep/expl-pv.html'},
     {name: 'expl:pass',     description: 'Clitics with passive value', site: 'https://universaldependencies.org/u/dep/expl-pass.html'},

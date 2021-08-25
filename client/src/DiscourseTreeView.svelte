@@ -10,12 +10,13 @@
 	}
 </script>
 <script lang="ts">
-//	import { slide } from 'svelte/transition'
+import { slide } from 'svelte/transition'
 
 
 import ConlluTree from "./ts_tree/tree";
 import type DiscourseTree from "./ts_tree/discourseTree";
 import TreeItem from "./ConlluItem.svelte";
+import { onMount } from 'svelte';
 
 	export let root : DiscourseTree
 	export let node : DiscourseTree
@@ -59,13 +60,21 @@ import TreeItem from "./ConlluItem.svelte";
 		// console.log('Alert c_command')
 		if(discourse_c_commanders.includes(node)) {
 			// console.log('Matches ' + node.component_text)
-			bk_color = 'lightcoral'
+			bk_color = '#FFDDDD80'
 		}
 	}
 	
+	// $: {
+	// 	expanded;
+	// 	console.log('Expanded!')
+	// 	window.scrollTo({ left: 0, top: document.body.scrollHeight, behavior: "smooth" })
+	// }
+
+	onMount(() => window.scrollTo({ left: 0, top: document.body.scrollHeight, behavior: "smooth" }))
+
 </script>
 
-<ul><!-- transition:slide -->
+<ul>
 	<li>
 		<div id={label}>
 			{#if children && children.length > 0}
