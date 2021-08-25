@@ -69,10 +69,10 @@
     </select>
     Parser:
     <select bind:value={parser}>
+        <option value='nlpcube'>NLP Cube</option>
         {#if lang_value == 'ro'}
         <option value='racai'>RACAI - TEPROLIN</option>
         {/if}
-        <option value='nlpcube'>NLP Cube</option>
     </select>        
     
     <button type="submit">Parse</button>

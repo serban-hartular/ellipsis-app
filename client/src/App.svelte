@@ -12,13 +12,14 @@
 
 
 	let conllu_tree : ConlluTree = null;
-	// let ellipsis_detector : EllipsisDetector = null //= new EllipsisDetector([ro_obj_licensers])
+	let discourse_tree : DiscourseTree = null;
 
 	let selected_id:string = ''
 	let selected_data = null
 	let lang_value = 'ro'
 	let comment_value = ''
 	let sentence_src = ''
+	let discourse_c_commanders : Array<DiscourseTree> = []
 
 	$:{ 
 		selected_id;
@@ -26,6 +27,7 @@
 			conllu_tree = conllu_tree
 			let selected_node = conllu_tree.find({'ID':selected_id})
 			selected_data = (selected_node ? selected_node.data : null)
+			window.scrollTo({ left: 0, top: document.body.scrollHeight, behavior: "smooth" });
 		} else {
 			selected_data = null
 		}
@@ -34,7 +36,8 @@
 	import {ro_intranz_licensers, ro_obj_licensers, ro_passreflex_licensers, 
 			ro_copula_licensers, ro_iobj_copula_licensers, ro_impers_experiment_dobj,
 			ro_impers_experiment_iobj} from './ts_tree/roEllipsisPatterns'
-import { DiscourseTree } from './ts_tree/discourseTree';
+			import DiscourseTree from './ts_tree/discourseTree';
+			import DiscourseTreeView from './DiscourseTreeView.svelte';
 
 	let e_obj_detector = new EllipsisDetector([ro_obj_licensers, ro_passreflex_licensers,
 		ro_intranz_licensers, ro_copula_licensers, ro_iobj_copula_licensers,
@@ -52,6 +55,7 @@ import { DiscourseTree } from './ts_tree/discourseTree';
 	$: {
 		new_parse_flag; //if new parse, clear ellipsis candidates
 		e_list = []
+		discourse_tree = null
 	}
 
 	function exportToClipboard() {
@@ -64,8 +68,7 @@ import { DiscourseTree } from './ts_tree/discourseTree';
 
 	function findEllipses() {
 		e_list = e_obj_detector.findEllipsis(conllu_tree)
-		let discourse = new DiscourseTree(conllu_tree)
-		console.log(discourse)
+		discourse_tree = new DiscourseTree(conllu_tree.copy())
 	}
 	function onEllipsisClick(event) {
 		// console.log(event.target)
@@ -121,7 +124,7 @@ import { DiscourseTree } from './ts_tree/discourseTree';
 				<ConlluTreeView bind:root={conllu_tree} bind:node={conllu_tree} bind:selected_id={selected_id} />
 				<br/>
 				<div>
-					<button on:click={findEllipses}>Find Ellipses</button>
+					<button on:click={findEllipses}>Build Discourse Tree / Find Ellipses</button>
 					<button class="help" on:click={()=>getModal('modal_findellipsis').open()}>?</button>
 					<table class="ellipses">
 					{#if e_list.length > 0}
@@ -136,6 +139,17 @@ import { DiscourseTree } from './ts_tree/discourseTree';
 						</tr>
 					{/each}
 					</table>
+				</div>
+				<div>
+					{#if discourse_tree}
+						<h3>Discourse Tree</h3>
+						<DiscourseTreeView
+							bind:root = {discourse_tree}
+							bind:node = {discourse_tree} 
+							bind:selected_id = {selected_id}
+							bind:discourse_c_commanders = {discourse_c_commanders}
+						/>
+					{/if}
 				</div>
 			{/if}
 		</td>

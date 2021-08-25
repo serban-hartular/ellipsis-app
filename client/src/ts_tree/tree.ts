@@ -22,6 +22,9 @@ export class ConlluData {
             }
         }
     }
+    copy() : ConlluData {
+        return new ConlluData(this)
+    }
     static conlluEntry2Property(text : string): string {
         if(text == '_') return ''
         return text
@@ -36,7 +39,8 @@ export class ConlluData {
         Object.assign(this_dict, ConlluData.getFeatureDict(this.FEATS)) //add FEATS k,v pairs
         Object.assign(this_dict, ConlluData.getFeatureDict(this.MISC))  //add MISC k,v pairs
         for(let p in dict) {
-            if(this_dict[p] == undefined) return false
+            if(this_dict[p] == undefined) return false //I don't have this property
+            if(!dict[p] || dict[p] == '') return false //otherwise, empty string matches everything
             if(this_dict[p].includes(dict[p])) continue
             return false
         } 
@@ -122,6 +126,12 @@ export default class ConlluTree {
         this.generateComponentText()
         return child
     }
+    copy() : ConlluTree {
+        let copy = new ConlluTree(new ConlluData(this.data))
+        for(let child of this.children)
+            copy.addChild(child.copy())
+        return copy
+    }
     * traverse() : Generator<ConlluTree> {
         yield this;
         for(let child of this.children) {
@@ -136,6 +146,13 @@ export default class ConlluTree {
             if(child.matches(dict))
                 return child
         return null
+    }
+    childrenMatch(dict : Object) : Array<ConlluTree> {
+        let match : Array<ConlluTree>  = []
+        for(let child of this.children)
+            if(child.matches(dict))
+                match.push(child)
+        return match.length > 0 ? match : null
     }
     find(dict : Object) {
         if(this.matches(dict))
