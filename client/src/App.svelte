@@ -112,6 +112,11 @@
 	<title>Ellipsis App</title>
 </svelte:head>
 
+<p class="notice">
+2021, Șerban Hartular<br/>
+This is a work in progress.
+</p>
+<hr/>
 <table>
 	<tr>
 		<td style="padding-left: 20px;">
@@ -144,8 +149,9 @@
 				<div>
 					{#if discourse_tree}
 						<h3>Discourse Tree</h3>
-						Legend: <span style="background-color: #FFDDDD80;">C-commander</span> of 
+						<p>Legend: <span style="background-color: #FFDDDD80;">C-commander</span> of 
 								<span style="background-color: lightblue;">selection</span>
+						</p>
 						<DiscourseTreeView
 							bind:root = {discourse_tree}
 							bind:node = {discourse_tree} 
@@ -257,4 +263,8 @@
 	:global(html) { height: 100%; overflow:auto; }
 	:global(body) { height: 100%; }
 
+	.notice {
+		font-family: 'Courier New', Courier, monospace;
+		font-size: 10pt;
+	}
 </style>
