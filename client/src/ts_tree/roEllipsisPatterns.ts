@@ -8,9 +8,21 @@ export let ro_obj_licensers = new Licenser(
     [{ name: 'xcomp', checkFn: (n) => true },
     { name: 'ccomp', checkFn: (n) => true },
     { name: 'obj', checkFn: isRelativePersPron }],
-    ['vrea', 'voi', 'putea', 'dori', 'începe', 'termina', 'continua', 'încerca', 'reuși', 'refuza'],
+    ['vrea', 'voi', 'putea', 'dori', 'începe', 'termina', 'continua', 'încerca', 'reuși', 'refuza',
+        'propune', 'ști', 'crede', 'hotărî', 'hotărâ', 'forța', 'porunci'],
     (n) => isVerb(n) && !isPassReflexive(n) && !hasIobj(n)
 );
+
+export let ro_obj_licensers_w_iobj = new Licenser(
+    'dirobj',
+    [{ name: 'xcomp', checkFn: (n) => true },
+    { name: 'ccomp', checkFn: (n) => true },
+    { name: 'obj', checkFn: isRelativePersPron }],
+    ['propune', 'porunci', 'permite', 'prounci', 'spune', 'îngădui', 'ordona'],
+    (n) => isVerb(n) && !isPassReflexive(n) && hasIobj(n)
+);
+
+//cu expl:pv, a se aștepta, 
 
 export let ro_passreflex_licensers = new Licenser(
     'passreflex subj',
@@ -91,9 +103,9 @@ export function addAntecedents(report : EllipsisReport, discourseTree : Discours
     //find ellipsis node
     let e_node = discourseTree.find({'ID':report.node.data.ID})
     if(!e_node) return false
-    console.log(e_node)
+    // console.log(e_node)
     let c_commanders = e_node.c_commands_me()
-    console.log(c_commanders)
+    // console.log(c_commanders)
     report.antecedents = []
     for(let c of c_commanders) {
         let antecedent = c.content

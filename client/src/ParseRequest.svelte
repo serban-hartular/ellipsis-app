@@ -11,7 +11,7 @@
     let parser;
 
 	let message = '';
-    let sentence = '';
+    let sentence = 'Ion o iubește pe Maria, dar ea nu știe.';
 
     function processInput() {
         //console.log(lang_value)
@@ -22,7 +22,7 @@
     }
 
     function doPost () {
-        console.log(lang_value + ', ' + parser)
+        // console.log(lang_value + ', ' + parser)
         fetch('./parse', {
             method: 'POST',
             headers: {

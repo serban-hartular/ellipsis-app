@@ -20,6 +20,7 @@
 	let comment_value = ''
 	let sentence_src = ''
 	let discourse_c_commanders : Array<DiscourseTree> = []
+	let ellipis_finder_message = ''
 
 	$:{ 
 		selected_id;
@@ -36,12 +37,13 @@
 	import {ro_intranz_licensers, ro_obj_licensers, ro_passreflex_licensers, 
 			ro_copula_licensers, ro_iobj_copula_licensers, ro_impers_experiment_dobj,
 			ro_impers_experiment_iobj,
-addAntecedents} from './ts_tree/roEllipsisPatterns'
+addAntecedents,
+ro_obj_licensers_w_iobj} from './ts_tree/roEllipsisPatterns'
 			import DiscourseTree from './ts_tree/discourseTree';
 			import DiscourseTreeView from './DiscourseTreeView.svelte';
 
-	let e_obj_detector = new EllipsisDetector([ro_obj_licensers, ro_passreflex_licensers,
-		ro_intranz_licensers, ro_copula_licensers, ro_iobj_copula_licensers,
+	let ellipsis_detector = new EllipsisDetector([ro_obj_licensers, ro_obj_licensers_w_iobj, 
+		ro_passreflex_licensers, ro_intranz_licensers, ro_copula_licensers, ro_iobj_copula_licensers,
 		ro_impers_experiment_iobj, ro_impers_experiment_dobj])
 	let e_list : Array<EllipsisReport> = []
 	let new_parse_flag = false
@@ -57,6 +59,7 @@ addAntecedents} from './ts_tree/roEllipsisPatterns'
 		new_parse_flag; //if new parse, clear ellipsis candidates
 		e_list = []
 		discourse_tree = null
+		ellipis_finder_message = ''
 	}
 
 	function exportToClipboard() {
@@ -69,16 +72,14 @@ addAntecedents} from './ts_tree/roEllipsisPatterns'
 
 	function findEllipses() {
 		discourse_tree = new DiscourseTree(conllu_tree.copy())
-		e_list = e_obj_detector.findEllipsis(conllu_tree)
-		// console.log('Adding antecedents. ' + discourse_tree.content.component_text)
+		e_list = ellipsis_detector.findEllipsis(conllu_tree)
 		for(let e of e_list) {
 			addAntecedents(e, discourse_tree)
-			// console.log('Antecedents: ' + e.antecedents)
 		}
+		if(e_list.length == 0)
+			ellipis_finder_message = "No ellipsis found. Verify parse correctness. Is the licenser unusual?"
 	}
 	function onEllipsisClick(event) {
-		// console.log(event.target)
-		// console.log(event.target.id)
 		selected_id = event.target.id
 		
 	}
@@ -141,8 +142,10 @@ This is a work in progress. Click <b><a href="./static" target="_blank" rel="noo
 					<button class="help" on:click={()=>getModal('modal_findellipsis').open()}>?</button>
 					<table class="ellipses">
 					{#if e_list.length > 0}
-						<tr><th colspan="4">Candidates</th></tr>
-						<tr><th>ID</th><th>Lemma</th><th>Missing</th><th>Antecedent</th></tr>
+						<tr><th colspan="4">Ellipsis Candidates</th></tr>
+						<tr><th>ID</th><th>Licenser</th><th>Missing</th><th>Antecedent<br/>Lemma</th></tr>
+					{:else}
+						<tr><td><i>{ellipis_finder_message}</i></td></tr>
 					{/if}
 					{#each e_list as ellipsis}
 						<tr on:click={onEllipsisClick} style="cursor: pointer;">
