@@ -27,7 +27,7 @@
 			conllu_tree = conllu_tree
 			let selected_node = conllu_tree.find({'ID':selected_id})
 			selected_data = (selected_node ? selected_node.data : null)
-			window.scrollTo({ left: 0, top: document.body.scrollHeight, behavior: "smooth" });
+			//window.scrollTo({ left: 0, top: document.body.scrollHeight, behavior: "smooth" });
 		} else {
 			selected_data = null
 		}
