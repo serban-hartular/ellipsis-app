@@ -1,6 +1,6 @@
 <script lang='ts'>
 
-    import Select from 'svelte-select';
+    //import Select from 'svelte-select';
     import { loop_guard } from 'svelte/internal';
 
     export let obj : Object
