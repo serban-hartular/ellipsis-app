@@ -118,11 +118,12 @@ addAntecedents} from './ts_tree/roEllipsisPatterns'
 	<title>Ellipsis App</title>
 </svelte:head>
 
-<p class="notice">
+<span class="notice">
 2021, Șerban Hartular<br/>
-This is a work in progress.
-</p>
+This is a work in progress. Click <b><a href="./static" target="_blank" rel="noopener noreferrer">here</a></b> for a description.<br/>
+</span>
 <hr/>
+<h2>Verb-licensed Ellipsis Finder for Romanian</h2>
 <table>
 	<tr>
 		<td style="padding-left: 20px;">
@@ -185,7 +186,7 @@ This is a work in progress.
 				<button on:click={exportToClipboard}>Export Conllu to Clipboard</button>				
 			</div>
 			<div>
-				<button on:click={()=>getModal('add_to_db').open()}>Add to Server Database</button>				
+				<button on:click={()=>getModal('add_to_db').open()}>Submit Sentence/Comment</button>				
 			</div>
 		</td>
 	</tr>
@@ -207,7 +208,6 @@ This is a work in progress.
 		ellipsis of verb phrases. Its closest equivalent in English would be VP-/Post-Auxiliary
 		Ellipsis and Null Complement Anaphora, depending on the licenser.
 	</p>
-	<p class="modal">The method used to find ellipses is described on this page.</p>
 	<p class="modal">It's worth emphasizing that this method depends on a correct parse. 
 		Correcting the parse tree and clicking the "Find Ellipsis" button again may well yield
 		the expected result.
