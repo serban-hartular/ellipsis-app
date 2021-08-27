@@ -132,8 +132,9 @@ export default class ConlluTree {
             copy.addChild(child.copy())
         return copy
     }
-    * traverse() : Generator<ConlluTree> {
-        yield this;
+    * traverse(match_dict : Object = null) : Generator<ConlluTree> {
+        if(!match_dict || this.matches(match_dict))
+                yield this;
         for(let child of this.children) {
             yield *child.traverse()
         }

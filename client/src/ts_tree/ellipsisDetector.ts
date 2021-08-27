@@ -38,9 +38,11 @@ export class Licenser {
 export class EllipsisReport {
     node : ConlluTree
     type : string
+    antecedents : Array<ConlluTree>
     constructor(node : ConlluTree, type : string = '') {
         this.node = node
         this.type = type
+        this.antecedents = []
     }
 }
 

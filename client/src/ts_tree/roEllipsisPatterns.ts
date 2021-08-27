@@ -1,12 +1,14 @@
 import type ConlluTree from "./tree";
-import { Licenser, DeprelCheck } from "./ellipsisDetector";
+import { Licenser, DeprelCheck, EllipsisReport } from "./ellipsisDetector";
+import DiscourseTree from "./discourseTree"
+
 
 export let ro_obj_licensers = new Licenser(
     'dirobj',
     [{ name: 'xcomp', checkFn: (n) => true },
     { name: 'ccomp', checkFn: (n) => true },
     { name: 'obj', checkFn: isRelativePersPron }],
-    ['vrea', 'putea', 'dori', 'începe', 'termina', 'continua', 'încerca', 'reuși', 'refuza'],
+    ['vrea', 'voi', 'putea', 'dori', 'începe', 'termina', 'continua', 'încerca', 'reuși', 'refuza'],
     (n) => isVerb(n) && !isPassReflexive(n) && !hasIobj(n)
 );
 
@@ -83,4 +85,25 @@ function getDobj(node : ConlluTree) : ConlluTree {
 }
 function hasDobj(node : ConlluTree) : boolean {
     return getDobj(node) != null
+}
+
+export function addAntecedents(report : EllipsisReport, discourseTree : DiscourseTree) : boolean {
+    //find ellipsis node
+    let e_node = discourseTree.find({'ID':report.node.data.ID})
+    if(!e_node) return false
+    console.log(e_node)
+    let c_commanders = e_node.c_commands_me()
+    console.log(c_commanders)
+    report.antecedents = []
+    for(let c of c_commanders) {
+        let antecedent = c.content
+        do {
+            report.antecedents.unshift(antecedent)
+            let next = antecedent.childMatches({'DEPREL':'ccomp'})
+            if(!next) next = antecedent.childMatches({'DEPREL':'xcomp'})
+            if(!next) next = antecedent.childMatches({'DEPREL':'advcl'})
+            antecedent = next
+        } while(antecedent && !DiscourseTree.getRelativeClause(antecedent))
+    }
+    return true
 }

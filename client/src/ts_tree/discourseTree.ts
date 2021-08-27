@@ -30,9 +30,17 @@ export default class DiscourseTree {
         }
         return c_commanders
     }
-    content_matches(dict : Object) : boolean {
-        
+    content_matches(dict : Object) : boolean {        
         return this.content && this.content.find(dict) != null
+    }
+    find(dict : Object) : DiscourseTree {
+        if(this.content_matches(dict)) return this
+        for(let child of [this.left, this.right]) {
+            if(!child) continue
+            let found = child.find(dict)
+            if(found) return found
+        }
+        return null
     }
     separateCoordinateClause(tree:ConlluTree) : boolean {
         let conjs = tree.childrenMatch({'DEPREL':'conj'}) // conjunct tree
@@ -52,21 +60,13 @@ export default class DiscourseTree {
         return true
     }
     separateRelativeClause(tree:ConlluTree) : boolean {
-        //this first part is ugly, redo it later
-        let ccomp = tree.childrenMatch({'DEPREL':'ccomp'}); if(!ccomp) ccomp = [] 
-        let advcl = tree.childrenMatch({'DEPREL':'advcl'}); if(!advcl) advcl = []
-        let xcomp = tree.childrenMatch({'DEPREL':'xcomp'}); if(!xcomp) xcomp = [] 
-        let rels = ccomp.concat(advcl); rels = rels.concat(xcomp)
-        // console.log(tree.childrenMatch({'DEPREL':'advcl'}))
-        // console.log(rels)
-        // console.log(rels[0].childMatches({'PronType':'Rel'}))
-        rels = rels.filter(n => n.childMatches({'PronType':'Rel'}) != null) //filter for Relative Pron/Adv
-        if(rels.length == 0)
+        let get_rel = DiscourseTree.getRelativeClause(tree)
+        if(!get_rel)
             return false
-        let rel = rels[0]
+        let rel : ConlluTree, rel_pron : ConlluTree
+        [rel, rel_pron] = get_rel
         this.component_text = tree.component_text
         tree.removeChild(rel)
-        let rel_pron = rel.childMatches({'PronType':'Rel'}) //relative pron/adv
         rel.removeChild(rel_pron)
         this.content = rel_pron
         this.left = new DiscourseTree(tree, this)
@@ -96,4 +96,18 @@ export default class DiscourseTree {
         return true
     }
     isLeaf() : boolean { return this.left == null && this.right == null }
+    static getRelativeClause(tree : ConlluTree) : Array<ConlluTree> {
+        //this first part is ugly, redo it later
+        let ccomp = tree.childrenMatch({'DEPREL':'ccomp'}); if(!ccomp) ccomp = [] 
+        let advcl = tree.childrenMatch({'DEPREL':'advcl'}); if(!advcl) advcl = []
+        let xcomp = tree.childrenMatch({'DEPREL':'xcomp'}); if(!xcomp) xcomp = [] 
+        let rels = ccomp.concat(advcl); rels = rels.concat(xcomp)
+
+        rels = rels.filter(n => n.childMatches({'PronType':'Rel'}) != null) //filter for Relative Pron/Adv
+        if(rels.length == 0)
+            return null
+        let rel = rels[0]
+        let rel_pron = rel.childMatches({'PronType':'Rel'}) //relative pron/adv
+        return [rel, rel_pron]
+    }
 }

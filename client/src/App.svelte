@@ -35,7 +35,8 @@
 	import { EllipsisDetector, EllipsisReport } from './ts_tree/ellipsisDetector';
 	import {ro_intranz_licensers, ro_obj_licensers, ro_passreflex_licensers, 
 			ro_copula_licensers, ro_iobj_copula_licensers, ro_impers_experiment_dobj,
-			ro_impers_experiment_iobj} from './ts_tree/roEllipsisPatterns'
+			ro_impers_experiment_iobj,
+addAntecedents} from './ts_tree/roEllipsisPatterns'
 			import DiscourseTree from './ts_tree/discourseTree';
 			import DiscourseTreeView from './DiscourseTreeView.svelte';
 
@@ -67,8 +68,13 @@
     }
 
 	function findEllipses() {
-		e_list = e_obj_detector.findEllipsis(conllu_tree)
 		discourse_tree = new DiscourseTree(conllu_tree.copy())
+		e_list = e_obj_detector.findEllipsis(conllu_tree)
+		// console.log('Adding antecedents. ' + discourse_tree.content.component_text)
+		for(let e of e_list) {
+			addAntecedents(e, discourse_tree)
+			// console.log('Antecedents: ' + e.antecedents)
+		}
 	}
 	function onEllipsisClick(event) {
 		// console.log(event.target)
@@ -134,14 +140,16 @@ This is a work in progress.
 					<button class="help" on:click={()=>getModal('modal_findellipsis').open()}>?</button>
 					<table class="ellipses">
 					{#if e_list.length > 0}
-						<tr><th colspan="3">Candidates</th></tr>
-						<tr><th>ID</th><th>Lemma</th><th>Missing</th></tr>
+						<tr><th colspan="4">Candidates</th></tr>
+						<tr><th>ID</th><th>Lemma</th><th>Missing</th><th>Antecedent</th></tr>
 					{/if}
 					{#each e_list as ellipsis}
 						<tr on:click={onEllipsisClick} style="cursor: pointer;">
 						<td class="ellipses" id={ellipsis.node.data.ID}>{ellipsis.node.data.ID}</td>
 						<td class="ellipses" id={ellipsis.node.data.ID}>{ellipsis.node.data.FORM}</td>
 						<td class="ellipses" id={ellipsis.node.data.ID}>{ellipsis.type}</td>
+						<td class="ellipsis" id={ellipsis.node.data.ID}>
+							{ellipsis.antecedents.map(n => n.data.LEMMA).join('/')}</td>
 						</tr>
 					{/each}
 					</table>
