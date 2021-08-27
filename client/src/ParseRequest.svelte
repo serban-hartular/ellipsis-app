@@ -65,7 +65,7 @@
     Language:
     <select bind:value={lang_value}>
         <option value='ro'>Romanian</option>
-        <option value='en'>English</option>
+        <!-- <option value='en'>English</option> -->
     </select>
     Parser:
     <select bind:value={parser}>
